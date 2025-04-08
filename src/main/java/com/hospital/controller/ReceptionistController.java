@@ -2,8 +2,10 @@ package com.hospital.controller;
 
 import com.hospital.model.*;
 import com.hospital.repository.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -38,6 +40,9 @@ public class ReceptionistController {
     private AppointmentRepository appointmentRepository;
 
     @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
     private DoctorRepository doctorRepository;
 
     @Autowired
@@ -57,22 +62,28 @@ public class ReceptionistController {
     }
 
     @PostMapping("/registerusers")
+    @Transactional
     public String registerPatient(@ModelAttribute Users user, @RequestParam("username") String username) {
         Users existingUser = usersRepository.findByUsername(username);
 
         if (existingUser == null) {
-            usersRepository.save(user);
-            existingUser = usersRepository.findByUsername(username); // Fetch saved user
+            usersRepository.saveAndFlush(user);
+            existingUser = user; // Fetch saved user
         }
         System.out.println("User ID: " + existingUser.getId());
         System.out.println("Hello Worlds from the ReceptionistController");
         System.out.println(usersRepository.toString());
 
         if(existingUser.getRole() == Users.Role.PATIENT) {
-            Date admissionDate = new Date(); // Set current date as admission date
-            Patient pat = new Patient(existingUser,admissionDate,existingUser.getId());
-            patientRepository.save(pat);
-        } 
+            Date admissionDate = new Date();
+            java.sql.Date sqlDate = new java.sql.Date(admissionDate.getTime());
+
+            // Direct SQL insert
+            String sql = "INSERT INTO patients (patient_id, admission_date) VALUES (?, ?)";
+            jdbcTemplate.update(sql, existingUser.getId(), sqlDate);
+        }
+
+
         else if(existingUser.getRole() == Users.Role.RECEPTIONIST) {
             Receptionist rec = new Receptionist(existingUser.getId());
             receptionistRepository.save(rec);

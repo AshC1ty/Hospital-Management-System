@@ -13,7 +13,8 @@ public class Patient implements Serializable {
     private int patientId;
 
     @OneToOne
-    @JoinColumn(name = "patient_id", referencedColumnName = "id", nullable = false, updatable = false)
+    @MapsId
+    @JoinColumn(name = "patient_id", referencedColumnName = "id")
     private Users user;
 
     @Column(name = "admission_date")
@@ -23,6 +24,7 @@ public class Patient implements Serializable {
     @Column(name = "discharge_date")
     @Temporal(TemporalType.DATE)
     private Date dischargeDate;
+
 
     // Constructors
     public Patient() {}

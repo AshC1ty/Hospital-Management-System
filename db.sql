@@ -2,9 +2,9 @@
 -- For MariaDB (to be sourced directly)
 
 -- Create database and user
-DROP DATABASE IF EXISTS hospital_management;
-CREATE DATABASE hospital_management;
-USE hospital_management;
+DROP DATABASE IF EXISTS hospital_management1;
+CREATE DATABASE hospital_management1;
+USE hospital_management1;
 
 -- Base User Table (for all roles)
 CREATE TABLE users (
