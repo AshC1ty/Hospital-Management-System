@@ -188,6 +188,9 @@ public class DoctorController {
     @Autowired
     private PatientTestService patientTestService;
 
+    @Autowired
+    private AppointmentRepository appointmentRepository;
+
     @GetMapping("/dischargepatient/{id}")
     public String showDischarge(HttpSession session, Model model, @PathVariable("id") int id) {
         // Get the logged-in user
@@ -292,6 +295,8 @@ public class DoctorController {
 
         // Delete all tests related to this patient from patientTest table
         patientTestRepository.deleteByPatientId(record.getPatient().getId());
+
+        appointmentRepository.deleteByPatientId(record.getPatient().getId());
 
 
 
