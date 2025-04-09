@@ -191,6 +191,9 @@ public class DoctorController {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
+    @Autowired
+    private NurseAssignmentRepository nurseAssignmentRepository;
+
     @GetMapping("/dischargepatient/{id}")
     public String showDischarge(HttpSession session, Model model, @PathVariable("id") int id) {
         // Get the logged-in user
@@ -299,6 +302,7 @@ public class DoctorController {
         appointmentRepository.deleteByPatientId(record.getPatient().getId());
 
 
+        nurseAssignmentRepository.deleteByPatientId(record.getPatient().getId());
 
         model.addAttribute("doctor", doctor);
         model.addAttribute("record", record);

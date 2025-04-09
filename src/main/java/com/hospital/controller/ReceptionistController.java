@@ -94,7 +94,7 @@ public class ReceptionistController {
         }
         
 
-        return "redirect:/users";
+        return "redirect:/receptionist/dashboard";
     }
 
 

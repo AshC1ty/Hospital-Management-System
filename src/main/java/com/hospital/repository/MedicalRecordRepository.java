@@ -21,6 +21,9 @@ public interface MedicalRecordRepository extends JpaRepository<MedicalRecord, In
            ")")
     List<MedicalRecord> findByDoctorId(@Param("doctorId") int doctorId);
 
+    @Query("SELECT m FROM MedicalRecord m WHERE m.patient.id = ?1")
+    List<MedicalRecord> findByDoctorId1(int doctorId);
+
     @Query("SELECT DISTINCT mr FROM MedicalRecord mr " +
            "WHERE mr.patient IN (" +
            "   SELECT a.patient FROM Appointment a " +
